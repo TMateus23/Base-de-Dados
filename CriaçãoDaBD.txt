@@ -1,0 +1,267 @@
+--TABELAS
+
+CREATE TABLE Membro (
+	IdMemb VARCHAR(50) PRIMARY KEY,
+	Nome VARCHAR(30) NOT NULL,
+	Pais VARCHAR(50),
+	Cidade VARCHAR(50),
+	DataNasc DATE);
+
+
+CREATE TABLE Amigo (
+	IdMemb1 VARCHAR(50),
+	IdMemb2 VARCHAR(50),
+	PRIMARY KEY (IdMemb1, IdMemb2),
+	FOREIGN KEY (IdMemb1) REFERENCES Membro(IdMemb),
+	FOREIGN KEY (IdMemb2) REFERENCES Membro(IdMemb));
+
+
+CREATE TABLE Livro (
+	ISBN VARCHAR(3) PRIMARY KEY,
+	Titulo VARCHAR(50) NOT NULL);
+
+  
+CREATE TABLE Gosta (
+	IdMemb VARCHAR(50),
+	ISBN VARCHAR(3),
+	PRIMARY KEY (IdMemb, ISBN),
+	FOREIGN KEY (IdMemb) REFERENCES Membro(IdMemb),
+	FOREIGN KEY (ISBN) REFERENCES Livro(ISBN));
+
+    
+CREATE TABLE Genero (
+	ISBN VARCHAR(3),
+	Genero VARCHAR(25),
+	PRIMARY KEY (ISBN, Genero),
+	FOREIGN KEY (ISBN) REFERENCES Livro(ISBN));
+
+    
+CREATE TABLE Autoria (
+	ISBN VARCHAR(3),
+	CodA VARCHAR(5),
+	PRIMARY KEY (ISBN, CodA));
+
+ 
+CREATE TABLE Autor (
+	CodA VARCHAR(5) PRIMARY KEY,
+	Nome VARCHAR(100) NOT NULL,
+	Pais VARCHAR(50));
+
+
+--EXEMPLOS 
+
+--a)
+
+INSERT INTO Membro VALUES('oleitor', 'António', 'Portugal', 'Évora', '1985-01-01');
+INSERT INTO Membro VALUES('odetetive', 'Barão', 'Portugal', 'Évora', '1983-10-05');
+INSERT INTO Membro VALUES('paginasemfolha', 'Charlote', 'Reino Unido', 'Londres', '1996-01-01');
+INSERT INTO Membro VALUES('bibliofilo', 'Diogo', 'Portugal', 'Amora', '1997-09-18');
+INSERT INTO Membro VALUES('capitulomaniaco', 'Enoque', 'Angola', 'Luanda', '2001-04-25');  
+INSERT INTO Membro VALUES('resenhistapaixonado', 'Francisco', 'Portugal', 'Tomar', '1976-01-21');
+INSERT INTO Membro VALUES('estantecheia', 'Gustavo', 'Brasil', 'Porto Alegre', '1996-11-09');
+INSERT INTO Membro VALUES('amantedahistoria', 'Irene', 'Portugal', 'Elvas', '1968-11-01');
+INSERT INTO Membro VALUES('versolivre', 'Joaquim', 'Portugal', 'Chaves', '2002-06-21');
+INSERT INTO Membro VALUES('poesiaemocional', 'Lígia', 'Portugal', 'Évora', '1972-11-25');
+INSERT INTO Membro VALUES('dicionariodoconhecimento', 'Manuel', 'Portugal', 'Évora', '1955-10-11');
+INSERT INTO Membro VALUES('contodeencantar', 'Nádia', 'Cabo Verde', 'Praia', '1992-11-16');
+INSERT INTO Membro VALUES('encadernacaoartistica', 'Oscar', 'Portugal', 'Leiria', '1986-03-22');
+INSERT INTO Membro VALUES('ilustracoescoloridas', 'Paulo', 'Portugal', 'Évora', '2010-11-22');
+INSERT INTO Membro VALUES('revisaoatenta', 'Ricardo', 'Portugal', 'Évora', '1985-05-16');
+INSERT INTO Membro VALUES('colecionadordepalavras', 'Saul', 'Portugal', 'Évora', '1967-07-16');
+INSERT INTO Membro VALUES('literaturaeterna', 'Tony', 'Portugal', 'Évora', '1996-01-18');
+INSERT INTO Membro VALUES('volumenoinfinito', 'Vasco', 'Portugal', 'Évora', '1968-04-16');
+INSERT INTO Membro VALUES('prateleiraimpecavel', 'Wesley', 'Brasil', 'Florianópolis', '1979-07-20');
+INSERT INTO Membro VALUES('aficcionadodaleitura', 'Zanfir', 'Roménia', 'Craiova', '1997-08-10');
+ 
+        
+--b)
+
+INSERT INTO livro VALUES('000', 'Dom Quixote');
+INSERT INTO livro VALUES('001', '1984');
+INSERT INTO livro VALUES('002', 'Terceira Guerra Mundial');
+INSERT INTO livro VALUES('003', 'Diário de um Estudante');
+INSERT INTO livro VALUES('004', 'Moby Dick');
+INSERT INTO livro VALUES('005', 'Aventuras de Tintin');
+INSERT INTO livro VALUES('006', 'Serviços Secretos');
+INSERT INTO livro VALUES('007', 'Romeu e Julieta ');
+INSERT INTO livro VALUES('008', 'Vida Selvagem');
+INSERT INTO livro VALUES('009', 'O Ínicio do Fim');
+
+INSERT INTO autor VALUES('12345', 'Agatha Christie','Reino Unido');
+INSERT INTO autor VALUES('12346', 'Francisco José Viegas', 'Portugal');
+INSERT INTO autor VALUES('12347', 'George Orwell', 'Reino Unido');
+INSERT INTO autor VALUES('12348', 'Fernando Pessoa', 'Portugal');
+INSERT INTO autor VALUES('12349', 'Herman Melville', 'Estados Unidos da América');
+
+INSERT INTO autoria VALUES('000', '12345');
+INSERT INTO autoria VALUES('000', '12346');
+INSERT INTO autoria VALUES('000', '12348');
+INSERT INTO autoria VALUES('001', '12345');
+INSERT INTO autoria VALUES('001', '12349');
+INSERT INTO autoria VALUES('002', '12346');
+INSERT INTO autoria VALUES('003', '12346');
+INSERT INTO autoria VALUES('004', '12347');
+INSERT INTO autoria VALUES('005', '12347');
+INSERT INTO autoria VALUES('006', '12348');    
+INSERT INTO autoria VALUES('007', '12348');
+INSERT INTO autoria VALUES('008', '12349');
+INSERT INTO autoria VALUES('009', '12349');
+
+INSERT INTO genero VALUES('000','Romance');
+INSERT INTO genero VALUES('001','Ficção Científica');
+INSERT INTO genero VALUES('002','Guerra');
+INSERT INTO genero VALUES('003','Biografia');
+INSERT INTO genero VALUES('004','Romance');
+INSERT INTO genero VALUES('005','Aventura');
+INSERT INTO genero VALUES('006','Ficção Científica');
+INSERT INTO genero VALUES('007','Tragédia');
+INSERT INTO genero VALUES('007','Drama');
+INSERT INTO genero VALUES('008','Ficção');
+INSERT INTO genero VALUES('009','Ficção');
+INSERT INTO genero VALUES('009','Drama');
+
+
+--c) 
+
+INSERT INTO amigo VALUES('odetetive', 'oleitor');
+INSERT INTO amigo VALUES('odetetive', 'paginasemfolha');
+INSERT INTO amigo VALUES('odetetive', 'bibliofilo');
+INSERT INTO amigo VALUES('odetetive', 'capitulomaniaco');
+INSERT INTO amigo VALUES('odetetive', 'resenhistapaixonado');
+INSERT INTO amigo VALUES('odetetive', 'estantecheia');
+INSERT INTO amigo VALUES('odetetive', 'amantedahistoria');
+INSERT INTO amigo VALUES('odetetive', 'versolivre');
+INSERT INTO amigo VALUES('odetetive', 'poesiaemocional');
+INSERT INTO amigo VALUES('odetetive', 'dicionariodoconhecimento');
+INSERT INTO amigo VALUES('odetetive', 'contodeencantar');
+INSERT INTO amigo VALUES('odetetive', 'encadernacaoartistica');
+INSERT INTO amigo VALUES('odetetive', 'ilustracoescoloridas');
+INSERT INTO amigo VALUES('odetetive', 'revisaoatenta');
+INSERT INTO amigo VALUES('odetetive', 'colecionadordepalavras');
+INSERT INTO amigo VALUES('odetetive', 'literaturaeterna');
+INSERT INTO amigo VALUES('odetetive', 'volumenoinfinito');
+INSERT INTO amigo VALUES('odetetive', 'prateleiraimpecavel');
+INSERT INTO amigo VALUES('odetetive', 'aficcionadodaleitura');
+
+--todos os amigos do oleitor
+INSERT INTO amigo VALUES('oleitor', 'paginasemfolha');
+INSERT INTO amigo VALUES('oleitor', 'bibliofilo');
+INSERT INTO amigo VALUES('oleitor', 'capitulomaniaco');
+INSERT INTO amigo VALUES('oleitor', 'versolivre');
+INSERT INTO amigo VALUES('oleitor', 'poesiaemocional');
+INSERT INTO amigo VALUES('oleitor', 'dicionariodoconhecimento');
+INSERT INTO amigo VALUES('oleitor', 'contodeencantar');
+INSERT INTO amigo VALUES('oleitor', 'literaturaeterna');
+INSERT INTO amigo VALUES('oleitor', 'volumenoinfinito');
+INSERT INTO amigo VALUES('oleitor', 'prateleiraimpecavel');
+INSERT INTO amigo VALUES('oleitor', 'aficcionadodaleitura');
+
+INSERT INTO amigo VALUES('versolivre', 'paginasemfolha');
+INSERT INTO amigo VALUES('versolivre', 'bibliofilo');
+INSERT INTO amigo VALUES('versolivre', 'capitulomaniaco');
+INSERT INTO amigo VALUES('versolivre', 'resenhistapaixonado');
+INSERT INTO amigo VALUES('versolivre', 'estantecheia');
+
+INSERT INTO amigo VALUES('resenhistapaixonado', 'ilustracoescoloridas');
+INSERT INTO amigo VALUES('resenhistapaixonado', 'revisaoatenta');
+INSERT INTO amigo VALUES('resenhistapaixonado', 'colecionadordepalavras');
+INSERT INTO amigo VALUES('resenhistapaixonado', 'poesiaemocional');
+INSERT INTO amigo VALUES('resenhistapaixonado', 'literaturaeterna');
+INSERT INTO amigo VALUES('resenhistapaixonado', 'volumenoinfinito');
+
+INSERT INTO amigo VALUES('bibliofilo', 'capitulomaniaco');
+INSERT INTO amigo VALUES('bibliofilo', 'resenhistapaixonado');
+INSERT INTO amigo VALUES('bibliofilo', 'estantecheia');
+INSERT INTO amigo VALUES('bibliofilo', 'amantedahistoria');
+
+
+--d)
+
+INSERT INTO gosta (IdMemb, ISBN) VALUES
+('oleitor', '000'),
+('oleitor', '001'),
+('oleitor', '002'),
+('oleitor', '003'),
+('oleitor', '004'),
+('oleitor', '005'),
+('oleitor', '006'),
+('oleitor', '007'),
+('oleitor', '008'),
+('oleitor', '009'),
+('versolivre', '000'),
+('versolivre', '001'),
+('versolivre', '002'),
+('versolivre', '003'),
+('versolivre', '004'),
+('versolivre', '005'),
+('versolivre', '006'),
+('versolivre', '007'),
+('versolivre', '008'),
+('versolivre', '009'),
+
+--restantes
+('odetetive', '005'),
+('paginasemfolha', '003'),
+('bibliofilo', '002'),
+('capitulomaniaco', '000'),
+('resenhistapaixonado', '009'),
+('estantecheia', '008'),
+('amantedahistoria', '001'),
+('poesiaemocional', '007'),
+('dicionariodoconhecimento', '008'),
+('contodeencantar', '009'),
+('encadernacaoartistica', '006'),
+('ilustracoescoloridas', '003'),
+('revisaoatenta', '004'),
+('colecionadordepalavras', '006'),
+('literaturaeterna', '007'),
+('volumenoinfinito', '006'),
+('prateleiraimpecavel', '007'),
+('aficcionadodaleitura', '004'),
+('dicionariodoconhecimento', '005'),
+('contodeencantar', '002'),
+('encadernacaoartistica', '001'),
+('ilustracoescoloridas', '000'),
+('revisaoatenta', '006'),
+('colecionadordepalavras', '009'),
+('literaturaeterna', '004'),
+('volumenoinfinito', '003'),
+('prateleiraimpecavel', '002'),
+('aficcionadodaleitura', '001');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
