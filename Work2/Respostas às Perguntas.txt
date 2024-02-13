@@ -1,0 +1,121 @@
+
+--Respostas às perguntas
+
+
+--a) 
+SELECT DISTINCT nomecon
+FROM Condutores
+WHERE info_veiculo = 'Grande';
+
+
+--b) 
+SELECT condutores.nomecon, clientes.nomecl
+FROM condutores,servicos,clientes,serv_pedidos
+WHERE condutores.n_cartaconducao = servicos.n_cartaconducao AND 
+servicos.origem = 'Evora' AND 
+servicos.destino = 'Montemor'
+AND serv_pedidos.n_cartaconducao = servicos.n_cartaconducao AND 
+serv_pedidos.nif = clientes.nif AND 
+servicos.data_ini >= '2023-11-01' AND 
+servicos.data_fim <= '2023-11-30' AND 
+serv_pedidos.data_ini = servicos.data_ini;
+
+
+--c) 
+SELECT clientes.nomecl
+FROM class_clien, clientes
+WHERE class_clien.nif = clientes.nif
+GROUP BY clientes.nif
+HAVING AVG(n_pontos) >= 4.5;
+
+
+--d)
+SELECT nomecon
+FROM condutores
+EXCEPT
+SELECT DISTINCT condutores.nomecon
+FROM condutores, serv_pedidos, servicos
+WHERE condutores.n_cartaconducao = serv_pedidos.n_cartaconducao AND 
+serv_pedidos.data_ini = servicos.data_ini AND 
+servicos.n_cartaconducao = condutores.n_cartaconducao AND 
+(servicos.destino = 'Beja' OR servicos.origem = 'Beja');
+
+
+--e) 
+SELECT DISTINCT condutorestelefone.telefone_co FROM condutorestelefone, servicos, pedidos, clientes
+WHERE condutorestelefone.n_cartaconducao = servicos.n_cartaconducao and 
+servicos.destino = 'Viana do Alentejo' and 
+clientes.nomecl = 'Manuel Santos' and 
+pedidos.data = '2023-01-26';
+
+
+--f) 
+SELECT nomecl, avg(n_pontos)
+FROM clientes,class_clien
+WHERE clientes.nif= class_clien.nif
+GROUP BY nomecl;
+
+
+--g) 
+SELECT condutores.nomecon, COUNT (serv_pedidos.n_cartaconducao) AS TotalServiços
+FROM condutores,serv_pedidos
+WHERE condutores.n_cartaconducao = serv_pedidos.n_cartaconducao
+GROUP BY condutores.nomecon;
+
+
+--h) 
+SELECT clientes.nomecl
+FROM Clientes, class_clien, Condutores, class_cond
+WHERE clientes.nif = class_clien.nif
+AND class_cond.n_cartaconducao = condutores.n_cartaconducao
+AND condutores.nomecon = 'Joaquim Gomes'
+GROUP BY clientes.nomecl
+ORDER BY AVG(class_clien.n_pontos) DESC;
+
+
+--i) 
+SELECT clientes.nomecl, COUNT(*) AS total_pedidos_cancelados
+FROM pedidos, clientes
+WHERE estado_pedido = 'Cancelado' AND
+pedidos.nif = clientes.nif
+GROUP BY clientes.nomecl
+ORDER BY total_pedidos_cancelados DESC;
+
+
+--j) 
+SELECT nomecon
+FROM condutores, servicos
+WHERE condutores.n_cartaconducao = servicos.n_cartaconducao AND 
+servicos.origem = 'Evora' AND 
+servicos.destino = 'Portel' AND 
+servicos.data_ini = '2023-12-20 09:00:00';
+
+
+--k)
+SELECT servicos.origem, servicos.destino
+FROM servicos
+WHERE data_ini >= '2023-12-01' AND 
+data_fim <= '2023-12-31'
+ORDER BY servicos.valor_cobrado DESC
+LIMIT 1;
+
+
+--l) 
+SELECT condutores.nomecon,sum(servicos.valor_cobrado) as total
+FROM condutores, servicos
+WHERE condutores.n_cartaconducao = servicos.n_cartaconducao
+GROUP BY nomecon 
+ORDER BY total DESC;
+
+
+--m) 
+SELECT clientes.nomecl
+FROM Clientes 
+WHERE NOT EXISTS (
+SELECT n_cartaconducao
+FROM Condutores
+WHERE info_veiculo = 'Grande'
+EXCEPT
+SELECT n_cartaconducao
+FROM serv_pedidos
+WHERE serv_pedidos.nif = clientes.nif);
