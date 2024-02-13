@@ -1,0 +1,599 @@
+--Clientes
+CREATE TABLE Clientes (
+    nomecl VARCHAR(20), 
+    nif INT PRIMARY KEY,
+    residencia VARCHAR(50),
+    telefone_cl VARCHAR(20),
+    n_cartao_credito VARCHAR(20)
+);
+
+--Condutores
+CREATE TABLE Condutores (
+    nomecon VARCHAR(20),
+    n_cartaconducao VARCHAR(20) PRIMARY KEY,
+    nif INT,
+    nib VARCHAR(20),
+    residencia VARCHAR(50),
+    nacionalidade VARCHAR(20),
+    info_veiculo VARCHAR(200)
+);
+
+--CondutoresTelefone
+CREATE TABLE CondutoresTelefone (
+    n_cartaconducao VARCHAR(20),
+    telefone_co VARCHAR(20),
+    PRIMARY KEY (n_cartaconducao, telefone_co),
+    FOREIGN KEY (n_cartaconducao) REFERENCES Condutores(n_cartaconducao)
+);
+
+--Pedidos
+CREATE TABLE Pedidos (
+    local_origem VARCHAR(30),
+    local_destino VARCHAR(30),
+    data DATE,
+    nif INT,
+    estado_pedido VARCHAR(30),
+    PRIMARY KEY (data, nif),
+    FOREIGN KEY (nif) REFERENCES Clientes(nif)
+);
+
+--Servicos
+CREATE TABLE Servicos (
+    origem VARCHAR(30),
+    destino VARCHAR(30),
+    data_ini TIMESTAMP,
+    data_fim TIMESTAMP, 
+    valor_cobrado DECIMAL(10,2),
+    n_cartaconducao VARCHAR(20) REFERENCES Condutores(n_cartaconducao) NULL,
+    PRIMARY KEY (data_ini, n_cartaconducao)
+);
+
+--class_clien
+CREATE TABLE class_clien (
+    nif INT,
+    n_pontos INT,
+    data_ini DATE,
+    PRIMARY KEY (nif, data_ini),
+    FOREIGN KEY (nif) REFERENCES Clientes(nif)
+);
+
+--class_cond
+CREATE TABLE class_cond (
+    n_cartaconducao VARCHAR(20),
+    n_pontos INT,
+    data_ini DATE,
+    PRIMARY KEY (n_cartaconducao, data_ini),
+    FOREIGN KEY (n_cartaconducao) REFERENCES Condutores(n_cartaconducao)
+);
+
+--serv_pedidos
+CREATE TABLE serv_pedidos (
+    data DATE,
+    nif INT REFERENCES Clientes(nif),
+    data_ini TIMESTAMP,
+    n_cartaconducao VARCHAR(20) REFERENCES Condutores(n_cartaconducao),
+    PRIMARY KEY (data, nif)
+);
+
+
+-- Exemplos 
+
+-- Inserção de Clientes
+INSERT INTO Clientes (nomecl, nif, residencia, telefone_cl, n_cartao_credito)
+VALUES
+('Maria Silva', 123456789, 'Rua A, Lisboa', '915256325', '1234-5678-9012-3456'),
+('Manuel Santos', 987654321, 'Rua B, Porto', '912345678', '2345-6789-0123-4567'),
+('Joana Oliveira', 111222333, 'Rua C, Coimbra', '918765432', '3456-7890-1234-5678'),
+('Rui Pereira', 444555666, 'Rua D, Braga', '919876543', '4567-8901-2345-6789'),
+('Sofia Costa', 777888999, 'Rua E, Aveiro', '914321654', '5678-9012-3456-7890'),
+('Carlos Mendes', 222333444, 'Rua F, Faro', '917654321', '6789-0123-4567-8901'),
+('Ana Sousa', 555666777, 'Rua G, Guarda', '911234567', '7890-1234-5678-9012'),
+('Miguel Fernandes', 888999000, 'Rua H, Horta', '916543210', '8901-2345-6789-0123'),
+('Isabel Lima', 333444555, 'Rua I, Ílhavo', '910987654', '9012-3456-7890-1234'),
+('Pedro Rocha', 666777888, 'Rua J, Jardim', '913876543', '0123-4567-8901-2345');
+
+-- Inserção de Condutores
+INSERT INTO Condutores (nomecon, n_cartaconducao, nif, nib, residencia, nacionalidade, info_veiculo)
+VALUES 
+('José Silva', 'AB123CD', 111222333, 'PT123456789', 'Rua X, Lisboa', 'Portuguesa', 'Pequeno'),
+('Ana Santos', 'CD456EF', 444555666, 'PT987654321', 'Rua Y, Porto', 'Portuguesa', 'Pequeno'),
+('Joaquim Gomes', 'EF789GH', 777888999, 'PT234567890', 'Rua Z, Coimbra', 'Portuguesa', 'Grande'),
+('Marta Oliveira', 'GH012IJ', 222333444, 'PT345678901', 'Rua W, Braga', 'Portuguesa', 'Pequeno'),
+('Rui Costa', 'IJ345KL', 555666777, 'PT012345678', 'Rua V, Aveiro', 'Portuguesa', 'Grande'),
+('', '', 0, '', '', '', '');
+
+
+-- Inserção de Telefones de Condutores
+INSERT INTO CondutoresTelefone (n_cartaconducao, telefone_co)
+VALUES 
+('AB123CD', '911234567'),
+('CD456EF', '931234567'),
+('EF789GH', '961112223'),
+('EF789GH', '966445556'),
+('GH012IJ', '917788999'),
+('IJ345KL', '965566677'),
+('IJ345KL', '911122333');
+
+-- Pedidos para o cliente com NIF 123456789
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Portel', '2023-12-19', 123456789, 'Concluído'),
+    ('Faro', 'Evora', '2024-01-22', 123456789, 'Concluído'),
+    ('Porto', 'Lisboa', '2024-01-06', 123456789, 'Concluído'),
+    ('Torres Vedras', 'Leiria', '2024-01-15', 123456789, 'Concluído'),
+    ('Lisboa', 'Faro', '2024-01-11', 123456789, 'Concluído'),
+    ('Leiria', 'Lisboa', '2024-01-09', 123456789, 'Concluído'),
+    ('Coimbra', 'Braga', '2024-01-18', 123456789, 'Concluído'),
+    ('Evora', 'Montemor', '2023-05-17', 123456789, 'Concluído'),
+    ('Coimbra', 'Beja', '2024-01-19', 123456789, 'Concluído'),
+    ('Porto', 'Faro', '2024-01-16', 123456789, 'Cancelado'),
+    ('Lisboa', 'Leiria', '2024-01-20', 123456789, 'Cancelado'),
+    ('Aveiro', 'Porto', '2024-01-12', 123456789, 'Concluído');
+
+-- Pedidos para o cliente com NIF 987654321
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-01-06', 987654321, 'Concluído'),
+    ('Faro', 'Evora', '2024-01-19', 987654321, 'Concluído'),
+    ('Porto', 'Lisboa', '2024-01-08', 987654321, 'Concluído'),
+    ('Braga', 'Aveiro', '2024-01-11', 987654321, 'Concluído'),
+    ('Lisboa', 'Faro', '2024-01-09', 987654321, 'Concluído'),
+    ('Leiria', 'Lisboa', '2024-01-16', 987654321, 'Concluído'),
+    ('Coimbra', 'Braga', '2024-01-22', 987654321, 'Concluído'),
+    ('Porto', 'Faro', '2024-01-20', 987654321, 'Concluído'),
+    ('Lisboa', 'Viana do Alentejo', '2023-01-26', 987654321, 'Concluído'),
+    ('Porto', 'Vigo', '2024-01-21', 987654321, 'Cancelado'),
+    ('Lisboa', 'Badajoz', '2024-01-23', 987654321, 'Cancelado');
+
+
+-- Pedidos para o cliente com NIF 222333444 (2 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-01-16', 222333444, 'Concluído'),
+    ('Faro', 'Evora', '2024-01-10', 222333444, 'Concluído'),
+    ('Porto', 'Lisboa', '2024-02-05', 222333444, 'Concluído'),
+    ('Braga', 'Aveiro', '2024-01-18', 222333444, 'Concluído'),
+    ('Lisboa', 'Porto', '2024-01-19', 222333444, 'Concluído'),
+    ('Leiria', 'Lisboa', '2024-01-22', 222333444, 'Concluído'),
+    ('Coimbra', 'Braga', '2024-01-21', 222333444, 'Concluído'),
+    ('Porto', 'Faro', '2024-01-30', 222333444, 'Concluído');
+
+-- Pedidos para o cliente com NIF 444555666 (2 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-01-11', 444555666, 'Concluído'),
+    ('Faro', 'Evora', '2024-01-02', 444555666, 'Concluído'),
+    ('Porto', 'Lisboa', '2024-02-11', 444555666, 'Concluído'),
+    ('Braga', 'Aveiro', '2024-03-19', 444555666, 'Concluído'),
+    ('Lisboa', 'Faro', '2024-03-14', 444555666, 'Concluído'),
+    ('Leiria', 'Lisboa', '2024-02-22', 444555666, 'Concluído'),
+    ('Coimbra', 'Braga', '2024-01-21', 444555666, 'Concluído'),
+    ('Faro', 'Portimao', '2024-02-23', 444555666, 'Cancelado'),
+    ('Viana do Castelo', 'Lisboa', '2024-01-26', 444555666, 'Cancelado');
+
+
+-- Pedidos para o cliente com NIF 777888999 (2 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-04-11', 777888999, 'Concluído'),
+    ('Faro', 'Evora', '2024-02-02', 777888999, 'Concluído'),
+    ('Porto', 'Lisboa', '2024-01-11', 777888999, 'Concluído'),
+    ('Braga', 'Aveiro', '2024-04-19', 777888999, 'Concluído'),
+    ('Lisboa', 'Faro', '2024-03-11', 777888999, 'Concluído'),
+    ('Braga', 'Vigo', '2024-04-22', 777888999, 'Cancelado'),
+    ('Lisboa', 'Setubal', '2024-03-12', 777888999, 'Cancelado'),
+    ('Leiria', 'Lisboa', '2024-02-24', 777888999, 'Concluído');
+
+-- Pedidos para o cliente com NIF 222333444 (2 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-03-11', 222333444, 'Concluído'),
+    ('Faro', 'Evora', '2024-02-18', 222333444, 'Cancelado'),
+    ('Porto', 'Lisboa', '2024-01-11', 222333444, 'Concluído'),
+    ('Braga', 'Aveiro', '2024-03-29', 222333444, 'Concluído'),
+    ('Evora', 'Montemor', '2023-03-28', 222333444, 'Concluído'),
+    ('Evora', 'Viana do Alentejo', '2024-03-27', 222333444, 'Concluído'),
+    ('Lisboa', 'Faro', '2024-03-15', 222333444, 'Cancelado');
+
+-- Pedidos para o cliente com NIF 555666777 (1 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-02-25', 555666777, 'Concluído'),
+    ('Faro', 'Evora', '2024-02-16', 555666777, 'Cancelado'),
+    ('Faro', 'Evora', '2024-02-17', 555666777, 'Cancelado'),
+    ('Porto', 'Lisboa', '2024-01-16', 555666777, 'Concluído'),
+    ('Porto', 'Lisboa', '2024-01-15', 555666777, 'Concluído'),
+    ('Braga', 'Aveiro', '2024-02-27', 555666777, 'Concluído');
+
+
+-- Pedidos para o cliente com NIF 888999000 (sem pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2024-02-25', 888999000, 'Concluído'),
+    ('Faro', 'Evora', '2024-02-16', 888999000, 'Concluído'),
+    ('Lisboa', 'Porto', '2024-02-26', 888999000, 'Cancelado'),
+    ('Faro', 'Evora', '2024-02-18', 888999000, 'Cancelado'),
+    ('Porto', 'Lisboa', '2024-01-16', 888999000, 'Concluído');
+
+-- Pedidos para o cliente com NIF 333444555 (1 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2023-12-25', 333444555, 'Concluído'),
+    ('Lisboa', 'Porto', '2023-12-17', 333444555, 'Concluído'),
+    ('Lisboa', 'Porto', '2023-12-28', 333444555, 'Cancelado'),
+    ('Faro', 'Evora', '2023-12-16', 333444555, 'Cancelado');
+
+
+-- Pedidos para o cliente com NIF 666777888 (1 pedidos cancelados)
+INSERT INTO Pedidos (local_origem, local_destino, data, nif, estado_pedido)
+VALUES
+    ('Lisboa', 'Porto', '2023-12-25', 666777888, 'Concluído');
+
+
+-- Inserção de Serviços
+
+-- Cliente 1 - 10 serviços + 2 cancelados
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Evora', 'Portel', '2023-12-20 09:00:00', '2023-12-20 12:00:00', 50.00, 'AB123CD'),
+('Faro', 'Evora', '2024-01-21 14:30:00', '2024-01-21 16:30:00', 35.00, 'CD456EF'),
+('Porto', 'Lisboa', '2024-01-22 09:00:00', '2024-01-22 11:00:00', 40.00, 'EF789GH'),
+('Torres Vedras', 'Leiria', '2024-01-23 12:45:00', '2024-01-23 14:45:00', 30.00, 'GH012IJ'),
+('Lisboa', 'Faro', '2024-01-24 16:00:00', '2024-01-24 18:00:00', 45.00, 'IJ345KL'),
+('Leiria', 'Lisboa', '2024-01-25 08:15:00', '2024-01-25 10:15:00', 38.00, 'AB123CD'),
+('Coimbra', 'Braga', '2024-01-26 11:30:00', '2024-01-26 13:30:00', 42.00, 'CD456EF'),
+('Evora', 'Montemor', '2024-01-28 11:30:00', '2024-01-26 13:30:00', 42.00, 'CD456EF'),
+('Coimbra', 'Beja', '2023-11-26 11:30:00', '2024-01-26 13:30:00', 42.00, 'IJ345KL'),
+('Porto', 'Faro', '2024-01-27 15:45:00', '2024-01-27 17:45:00', 36.00, ''),
+('Lisboa', 'Leiria', '2024-01-28 19:00:00', '2024-01-28 21:00:00', 48.00, ''),
+('Aveiro', 'Porto', '2024-01-29 10:30:00', '2024-01-29 12:30:00', 32.00, 'IJ345KL');
+
+
+-- Cliente 2 - 9 serviços sem cancelados
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2024-02-01 10:00:00', '2024-02-01 12:00:00', 55.00, 'AB123CD'),
+('Faro', 'Evora', '2024-02-02 14:30:00', '2024-02-02 16:30:00', 38.00, 'CD456EF'),
+('Porto', 'Lisboa', '2024-02-03 09:00:00', '2024-02-03 11:00:00', 42.00, 'EF789GH'),
+('Braga', 'Aveiro', '2024-02-04 12:45:00', '2024-02-04 14:45:00', 28.00, 'GH012IJ'),
+('Lisboa', 'Faro', '2024-02-05 16:00:00', '2024-02-05 18:00:00', 50.00, 'IJ345KL'),
+('Leiria', 'Lisboa', '2024-02-06 08:15:00', '2024-02-06 10:15:00', 40.00, 'AB123CD'),
+('Coimbra', 'Braga', '2024-02-07 11:30:00', '2024-02-07 13:30:00', 45.00, 'CD456EF'),
+('Porto', 'Faro', '2024-02-08 15:45:00', '2024-02-08 17:45:00', 36.00, 'EF789GH'),
+('Lisboa', 'Viana do Alentejo', '2023-12-20 19:00:00', '2023-12-20 21:00:00', 48.00, 'GH012IJ');
+
+-- Cliente 3 - 8 serviços + 2 cancelados
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2024-03-01 10:00:00', '2024-03-01 12:00:00', 60.00, 'AB123CD'),
+('Faro', 'Evora', '2024-03-02 14:30:00', '2024-03-02 16:30:00', 30.00, 'CD456EF'),
+('Porto', 'Lisboa', '2024-03-03 09:00:00', '2024-03-03 11:00:00', 45.00, 'EF789GH'),
+('Braga', 'Aveiro', '2024-03-04 12:45:00', '2024-03-04 14:45:00', 35.00, 'GH012IJ'),
+('Lisboa', 'Faro', '2024-03-05 16:00:00', '2024-03-05 18:00:00', 55.00, 'IJ345KL'),
+('Leiria', 'Lisboa', '2024-03-06 08:15:00', '2024-03-06 10:15:00', 42.00, 'AB123CD'),
+('Coimbra', 'Braga', '2024-03-07 11:30:00', '2024-03-07 13:30:00', 48.00, 'CD456EF'),
+('Porto', 'Faro', '2024-03-08 15:45:00', '2024-03-08 17:45:00', 39.00, 'EF789GH'),
+('Porto', 'Vigo', '2024-03-11 11:35:00', '2024-03-07 13:35:00', 19.75, ''),
+('Porto', 'Faro', '2024-03-12 15:50:00', '2024-03-08 17:55:00', 55.30, '');
+
+
+
+-- Cliente 4 - 7 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2024-04-01 10:00:00', '2024-03-11 12:00:00', 42.00, 'AB123CD'),
+('Faro', 'Evora', '2024-04-02 14:30:00', '2024-04-02 16:30:00', 48.00, 'CD456EF'),
+('Porto', 'Lisboa', '2024-04-03 09:00:00', '2024-04-03 11:00:00', 36.00, 'EF789GH'),
+('Braga', 'Aveiro', '2024-04-04 12:45:00', '2024-04-04 14:45:00', 54.00, 'GH012IJ'),
+('Lisboa', 'Faro', '2024-04-05 16:00:00', '2024-04-05 18:00:00', 30.00, 'IJ345KL'),
+('Leiria', 'Lisboa', '2024-04-06 08:15:00', '2024-04-06 10:15:00', 44.00, 'AB123CD'),
+('Coimbra', 'Braga', '2024-04-07 11:30:00', '2024-04-07 13:30:00', 33.00, 'CD456EF'),
+('Faro', 'Portimao', '2024-04-06 08:15:00', '2024-04-06 10:15:00', 55.00, ''),
+('Viana do Castelo', 'Lisboa', '2024-04-07 11:30:00', '2024-04-07 13:30:00', 31.00, '');
+
+-- Cliente 5 - 6 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2024-05-01 10:00:00', '2024-05-01 12:00:00', 25.00, 'AB123CD'),
+('Faro', 'Evora', '2024-05-02 14:30:00', '2024-05-02 16:30:00', 32.00, 'EF789GH'),
+('Porto', 'Lisboa', '2024-05-03 09:00:00', '2024-05-03 11:00:00', 40.00, 'EF789GH'),
+('Braga', 'Aveiro', '2024-05-04 12:45:00', '2024-05-04 14:45:00', 29.00, 'GH012IJ'),
+('Lisboa', 'Faro', '2024-05-05 16:00:00', '2024-05-05 18:00:00', 35.00, 'IJ345KL'),
+('Leiria', 'Lisboa', '2024-05-06 08:15:00', '2024-05-06 10:15:00', 38.00, 'AB123CD'),
+('Braga', 'Vigo', '2024-05-05 15:00:00', '2024-05-05 18:00:00', 35.00, ''),
+('Lisboa', 'Setubal', '2024-05-26 08:15:00', '2024-05-26 10:15:00', 38.00, '');
+
+
+
+-- Cliente 6 - 5 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2024-04-07 10:00:00', '2024-04-06 12:00:00', 42.00, 'AB123CD'),
+('Faro', 'Evora', '2024-04-03 14:30:00', '2024-04-03 16:30:00', 48.00, ''),
+('Porto', 'Lisboa', '2024-04-09 09:00:00', '2024-04-09 11:00:00', 36.00, 'EF789GH'),
+('Braga', 'Aveiro', '2024-03-12 12:45:00', '2024-03-12 14:45:00', 54.00, 'GH012IJ'),
+('Evora', 'Montemor', '2023-11-11 12:45:00', '2023-11-11 14:45:00', 54.00, 'GH012IJ'),
+('Evora', 'Viana do Alentejo', '2024-03-14 12:45:00', '2024-03-12 14:45:00', 54.00, 'GH012IJ'),
+('Lisboa', 'Faro', '2024-04-05 16:00:00', '2024-04-05 18:00:00', 30.00, '');
+
+
+-- Cliente 7 - 4 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2024-03-11 10:00:00', '2024-03-11 12:00:00', 60.00, 'AB123CD'),
+('Faro', 'Evora', '2025-11-05 14:30:00', '2025-11-05 16:30:00', 30.00, ''),
+('Faro', 'Evora', '2025-03-03 09:00:00', '2025-03-03 11:00:00', 45.00, ''),
+('Porto', 'Lisboa', '2025-03-03 09:00:00', '2025-03-03 11:00:00', 45.00, 'EF789GH'),
+('Porto', 'Lisboa', '2025-03-05 09:00:00', '2025-03-03 11:00:00', 45.00, 'EF789GH'),
+('Braga', 'Aveiro', '2025-03-04 12:45:00', '2025-03-04 14:45:00', 35.00, 'GH012IJ');
+
+
+-- Cliente 8 - 3 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2025-02-15 10:00:00', '2025-02-15 12:00:00', 55.00, 'AB123CD'),
+('Faro', 'Evora', '2025-06-02 14:30:00', '2025-06-02 16:30:00', 38.00, 'CD456EF'),
+('Lisboa', 'Porto', '2025-06-03 14:30:00', '2025-06-03 16:30:00', 38.00, ''),
+('Faro', 'Evora', '2025-06-05 14:30:00', '2025-06-05 16:30:00', 38.00, ''),
+('Porto', 'Lisboa', '2025-07-03 09:00:00', '2025-07-03 11:00:00', 42.00, 'CD456EF');
+
+
+-- Cliente 9 - 2 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+('Lisboa', 'Porto', '2025-11-01 10:00:00', '2024-11-01 12:00:00', 50.00, 'AB123CD'),
+('Lisboa', 'Porto', '2025-11-02 10:00:00', '2024-11-02 12:00:00', 50.00, 'AB123CD'),
+('Lisboa', 'Porto', '2025-11-03 10:00:00', '2024-11-03 12:00:00', 50.00, ''),
+('Faro', 'Evora', '2025-11-02 14:30:00', '2024-11-02 16:30:00', 35.00, '');
+
+-- Cliente 10 - 1 serviços
+INSERT INTO Servicos (origem, destino, data_ini, data_fim, valor_cobrado, n_cartaconducao)
+VALUES
+
+('Lisboa', 'Porto', '2025-01-08 14:25:00', '2025-01-01 17:00:00', 50.00, 'AB123CD');
+
+
+-- Cliente classifica condutor com 5 pontos
+INSERT INTO class_clien (nif, data_ini, n_pontos)
+VALUES
+(123456789, '2023-12-20 09:00:00', 5),
+(123456789, '2024-01-21 14:30:00', 5),
+(123456789, '2024-01-22 09:00:00', 5),
+(123456789, '2024-01-23 12:45:00', 5),
+(123456789, '2024-01-24 16:00:00', 5),
+(123456789, '2024-01-25 08:15:00', 5),
+(123456789, '2024-01-26 11:30:00', 5),
+(123456789, '2024-01-28 11:30:00', 5),
+(123456789, '2023-11-26 11:30:00', 5),
+(123456789, '2024-01-29 10:30:00', 5),
+
+(987654321, '2024-02-01 10:00:00', 3),
+(987654321, '2024-02-02 14:30:00', 2),
+(987654321, '2024-02-03 09:00:00', 1),
+(987654321, '2024-02-04 12:45:00', 2),
+(987654321, '2024-02-05 16:00:00', 1),
+(987654321, '2024-02-06 08:15:00', 3),
+(987654321, '2024-02-07 11:30:00', 2),
+(987654321, '2024-02-08 15:45:00', 1),
+(987654321, '2023-12-20 19:00:00', 3),
+
+(111222333, '2024-03-01 10:00:00', 4),
+(111222333, '2024-03-02 14:30:00', 4),
+(111222333, '2024-03-03 09:00:00', 3),
+(111222333, '2024-03-04 12:45:00', 5),
+(111222333, '2024-03-05 16:00:00', 4),
+(111222333, '2024-03-06 08:15:00', 5),
+(111222333, '2024-03-07 11:30:00', 4),
+(111222333, '2024-03-08 15:45:00', 5),
+
+(444555666, '2024-04-01 10:00:00', 2),
+(444555666, '2024-04-02 14:30:00', 3),
+(444555666, '2024-04-03 09:00:00', 3),
+(444555666, '2024-04-04 12:45:00', 4),
+(444555666, '2024-04-05 16:00:00', 4),
+(444555666, '2024-04-06 08:15:00', 2),
+(444555666, '2024-04-07 11:30:00', 1),
+
+(777888999, '2024-05-01 10:00:00', 4),
+(777888999, '2024-05-02 14:30:00', 4),
+(777888999, '2024-05-03 09:00:00', 4),
+(777888999, '2024-05-04 12:45:00', 3),
+(777888999, '2024-05-05 16:00:00', 5),
+(777888999, '2024-05-06 08:15:00', 4),
+
+(222333444, '2024-04-07 10:00:00', 4),
+(222333444, '2024-04-09 09:00:00', 5),
+(222333444, '2024-03-12 12:45:00', 5),
+(222333444, '2023-11-11 12:45:00', 3),
+(222333444, '2024-03-14 12:45:00', 2),
+
+(555666777, '2024-03-11 10:00:00', 1),
+(555666777, '2025-03-03 09:00:00', 4),
+(555666777, '2025-03-05 09:00:00', 3),
+(555666777, '2025-03-04 12:45:00', 3),
+
+(888999000, '2025-02-15 10:00:00', 2),
+(888999000, '2025-06-02 14:30:00', 1),
+(888999000, '2025-07-03 09:00:00', 2),
+
+(333444555, '2025-11-01 10:00:00', 5),
+(333444555, '2025-11-02 10:00:00', 3),
+
+(666777888, '2025-01-08 14:25:00', 4);
+
+
+INSERT INTO class_cond (n_cartaconducao, data_ini, n_pontos)
+VALUES 
+
+--NIF 123456789 (AVALIA)
+('AB123CD', '2023-12-20 09:00:00', 5),
+('CD456EF', '2024-01-21 14:30:00', 4),
+('EF789GH', '2024-01-22 09:00:00', 5),
+('GH012IJ', '2024-01-23 12:45:00', 2),
+('IJ345KL', '2024-01-24 16:00:00', 4),
+('AB123CD', '2024-01-25 08:15:00', 5),
+('CD456EF', '2024-01-26 11:30:00', 5),
+('CD456EF', '2024-01-28 11:30:00', 5),
+('IJ345KL', '2023-11-26 11:30:00', 5),
+('IJ345KL', '2024-01-29 10:30:00', 5),
+
+-- NIF 987654321 (AVALIA)
+('AB123CD', '2024-02-01 10:00:00', 5),
+('CD456EF', '2024-02-02 14:30:00', 4),
+('EF789GH', '2024-02-03 09:00:00', 5),
+('GH012IJ', '2024-02-04 12:45:00', 2),
+('IJ345KL', '2024-02-05 16:00:00', 4),
+('AB123CD', '2024-02-06 08:15:00', 5),
+('CD456EF', '2024-02-07 11:30:00', 5),
+('EF789GH', '2024-02-08 15:45:00', 5),
+('GH012IJ', '2023-12-20 19:00:00', 5),
+
+-- NIF 111222333 (AVALIA)
+('AB123CD', '2024-03-01 10:00:00', 5),
+('CD456EF', '2024-03-02 14:30:00', 4),
+('EF789GH', '2024-03-03 09:00:00', 5),
+('GH012IJ', '2024-03-04 12:45:00', 2),
+('IJ345KL', '2024-03-05 16:00:00', 4),
+('AB123CD', '2024-03-06 08:15:00', 5),
+('CD456EF', '2024-03-07 11:30:00', 5),
+('EF789GH', '2024-03-08 15:45:00', 5),
+
+-- NIF 444555666 (AVALIA)
+('AB123CD', '2024-04-01 10:00:00', 5),
+('CD456EF', '2024-04-02 14:30:00', 4),
+('EF789GH', '2024-04-03 09:00:00', 5),
+('GH012IJ', '2024-04-04 12:45:00', 2),
+('IJ345KL', '2024-04-05 16:00:00', 4),
+('AB123CD', '2024-04-06 08:15:00', 5),
+('CD456EF', '2024-04-07 11:30:00', 5),
+
+-- NIF 777888999 (AVALIA)
+('AB123CD', '2024-05-01 10:00:00', 5),
+('EF789GH', '2024-05-02 14:30:00', 4),
+('EF789GH', '2024-05-03 09:00:00', 5),
+('GH012IJ', '2024-05-04 12:45:00', 2),
+('IJ345KL', '2024-05-05 16:00:00', 4),
+('AB123CD', '2024-05-06 08:15:00', 5),
+
+-- NIF 222333444 (AVALIA)
+('AB123CD', '2024-04-07 10:00:00', 5),
+('EF789GH', '2024-04-09 09:00:00', 4),
+('GH012IJ', '2024-03-12 12:45:00', 5),
+('GH012IJ', '2023-11-11 12:45:00', 2),
+('GH012IJ', '2024-03-14 12:45:00', 4),
+
+-- NIF 555666777 (AVALIA)
+('AB123CD', '2024-03-11 10:00:00', 5),
+('EF789GH', '2025-03-03 09:00:00', 4),
+('EF789GH', '2025-03-05 09:00:00', 5),
+('GH012IJ', '2025-03-04 12:45:00', 2),
+
+-- NIF 888999000 (AVALIA)
+('AB123CD', '2025-02-15 10:00:00', 5),
+('CD456EF', '2025-06-02 14:30:00', 4),
+('CD456EF', '2025-07-03 09:00:00', 5),
+
+-- NIF 333444555 (AVALIA)
+('AB123CD', '2025-11-01 10:00:00', 5),
+('AB123CD', '2025-11-02 10:00:00', 4),
+
+-- NIF 666777888 (AVALIA)
+('AB123CD', '2025-01-08 14:25:00', 5);
+
+
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2023-12-19', 123456789, '2023-12-20 10:00:00', 'AB123CD'), 
+('2024-01-22', 123456789, '2024-01-21 14:30:00', 'CD456EF'),
+('2024-01-06', 123456789, '2024-01-22 09:00:00', 'EF789GH'),
+('2024-01-15', 123456789, '2024-01-23 12:45:00', 'GH012IJ'),
+('2024-01-11', 123456789, '2024-01-24 16:00:00', 'IJ345KL'),
+('2024-01-09', 123456789, '2024-01-25 08:15:00', 'AB123CD'),
+('2024-01-18', 123456789, '2024-01-26 11:30:00', 'AB123CD'),
+('2023-05-17', 123456789, '2024-01-28 11:30:00', 'CD456EF'),
+('2024-01-19', 123456789, '2023-11-26 11:30:00', 'IJ345KL'),
+('2024-01-12', 123456789, '2024-01-29 10:30:00', 'IJ345KL');
+
+
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-01-06', 987654321, '2024-02-01 10:00:00', 'AB123CD'),
+('2024-01-19', 987654321, '2024-01-21 14:30:00', 'CD456EF'),
+('2024-01-08', 987654321, '2024-02-03 09:00:00', 'EF789GH'),
+('2024-01-11', 987654321, '2024-02-04 12:45:00', 'GH012IJ'),
+('2024-01-09', 987654321, '2024-02-05 16:00:00', 'IJ345KL'),
+('2024-01-16', 987654321, '2024-02-06 08:15:00', 'AB123CD'),
+('2024-01-22', 987654321, '2024-02-07 11:30:00', 'CD456EF'),
+('2024-01-20', 987654321, '2024-02-08 15:45:00', 'EF789GH'),
+('2023-01-26', 987654321, '2023-12-20 19:00:00', 'GH012IJ');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-01-16', 111222333, '2024-03-01 10:00:00', 'AB123CD'),
+('2024-01-10', 111222333, '2024-03-02 14:30:00', 'CD456EF'),
+('2024-02-05', 111222333, '2024-03-03 09:00:00', 'EF789GH'),
+('2024-01-18', 111222333, '2024-03-04 12:45:00', 'GH012IJ'),
+('2024-01-19', 111222333, '2024-03-05 16:00:00', 'IJ345KL'),
+('2024-01-22', 111222333, '2024-03-06 08:15:00', 'AB123CD'),
+('2024-01-21', 111222333, '2024-03-07 11:30:00', 'CD456EF'),
+('2024-01-30', 111222333, '2024-03-08 15:45:00', 'EF789GH');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-01-11', 444555666, '2024-04-01 10:00:00', 'AB123CD'),
+('2024-01-02', 444555666, '2024-04-02 14:30:00', 'CD456EF'),
+('2024-02-11', 444555666, '2024-04-03 09:00:00', 'EF789GH'),
+('2024-03-19', 444555666, '2024-04-04 12:45:00', 'GH012IJ'),
+('2024-03-14', 444555666, '2024-04-05 16:00:00', 'IJ345KL'),
+('2024-02-22', 444555666, '2024-04-06 08:15:00', 'AB123CD'),
+('2024-01-21', 444555666, '2024-04-07 11:30:00', 'CD456EF');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-04-11', 444555666, '2024-05-01 10:00:00', 'AB123CD'),
+('2024-02-02', 444555666, '2024-05-02 14:30:00', 'EF789GH'),
+('2022-01-11', 444555666, '2024-05-03 09:00:00', 'EF789GH'),
+('2024-04-19', 444555666, '2024-05-04 12:45:00', 'GH012IJ'),
+('2024-03-11', 444555666, '2024-05-05 16:00:00', 'IJ345KL'),
+('2024-02-24', 444555666, '2024-05-06 08:15:00', 'AB123CD');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-03-11', 222333444, '2024-04-07 10:00:00', 'AB123CD'),
+('2024-01-11', 222333444, '2024-04-09 14:30:00', 'EF789GH'),
+('2022-03-29', 222333444, '2024-03-12 09:00:00', 'GH012IJ'),
+('2024-03-28', 222333444, '2023-11-11 12:45:00', 'GH012IJ'),
+('2024-03-27', 222333444, '2024-03-14 16:00:00', 'GH012IJ');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-02-25', 222333444, '2024-03-11 10:00:00', 'AB123CD'),
+('2024-01-16', 222333444, '2024-03-03 09:00:00', 'EF789GH'),
+('2022-01-15', 222333444, '2024-03-05 09:00:00', 'EF789GH'),
+('2024-02-27', 222333444, '2024-03-04 12:45:00', 'GH012IJ');
+
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-02-25', 888999000, '2024-02-15 12:00:00', 'AB123CD'),
+('2024-02-16', 888999000, '2024-06-02 16:30:00', 'CD456EF'),
+('2022-01-16', 888999000, '2024-07-03 11:00:00', 'CD456EF');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2024-12-25', 333444555, '2025-11-01 10:00:00', 'AB123CD'),
+('2024-12-17', 333444555, '2025-11-02 10:00:00', 'AB123CD');
+
+-- Inserting data into serv_pedidos
+INSERT INTO serv_pedidos (data, NIF, data_ini, n_cartaconducao)
+VALUES
+('2023-12-25', 333444555, '2025-01-08 14:25:00', 'AB123CD');
